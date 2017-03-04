@@ -4,11 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ViewUtils;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.FloatProperty;
 import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -49,7 +54,8 @@ import java.util.regex.Pattern;
 public class ConnectionActivity extends AppCompatActivity {
 
     private static final String TAG = "ConnectionActivity";
-    private ProgressDialog progressDialog;
+    private ProgressBar progressbar;
+    private TextView progress_description;
 
     private Person accountPerson;
     private Tweets accountPersonTimelineTweets;
@@ -58,6 +64,7 @@ public class ConnectionActivity extends AppCompatActivity {
 
     private ArrayList<Tweets> userTimelineTweets;
     private double latitude,longitude;
+
 
 
 
@@ -87,9 +94,11 @@ public class ConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection);
 
-        progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("Please wait!");
-        progressDialog.show();
+        progressbar=(ProgressBar) findViewById(R.id.id_progress_bar);
+
+        progress_description=(TextView) findViewById(R.id.id_progress_description);
+        String description = "We're learning about you to better connect you "+"<font color='#003566'>similar people</font>";
+        progress_description.setText(fromHtml(description));
 
         latitude = getIntent().getDoubleExtra("Latitude",0);
         longitude =getIntent().getDoubleExtra("Longitude",0);
@@ -349,12 +358,21 @@ public class ConnectionActivity extends AppCompatActivity {
                 Log.d(TAG,current.getPerson_screen_name()+" "+current.getPerson_similarity_score());
                 bestSimilarPerson.add(current);
             }
-            progressDialog.dismiss();
+
             Intent mainActivityIntent = new Intent(ConnectionActivity.this,MainActivity.class);
             mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mainActivityIntent.putExtra("BestSimilarPerson",(ArrayList<Person>) bestSimilarPerson);
             mainActivityIntent.putExtra("AccountPerson",(Person)accountPerson);
             startActivity(mainActivityIntent);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String source) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(source);
+        }
     }
 
 

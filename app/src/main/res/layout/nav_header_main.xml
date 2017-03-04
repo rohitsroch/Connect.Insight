@@ -21,7 +21,7 @@
         android:layout_height="60dp" />
 
     <TextView
-        android:id="@+id/id_nav_name"
+        android:id="@+id/id_nav_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -30,16 +30,17 @@
         android:textStyle="normal|bold" />
 
     <TextView
-        android:id="@+id/id_nav_mobileNo"
+        android:id="@+id/id_nav_user_screen_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="krohit1994"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/id_nav_emailId"
-        android:layout_width="wrap_content"
+        android:id="@+id/id_nav_user_location"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:text="Roorkee,Uttrakhand" />
 

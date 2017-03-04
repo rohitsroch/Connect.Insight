@@ -3,6 +3,7 @@ package com.rohitdeveloper.connectinsight;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -31,6 +35,11 @@ public class MainActivity extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
 
+    //Navigation drawer references
+    private ImageView nav_profileImage;
+    private TextView nav_user_name, nav_user_screen_name, nav_user_location;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +54,16 @@ public class MainActivity extends AppCompatActivity
         for(Person person:bestSimilarPerson){
             Log.d(TAG,person.getPerson_screen_name()+" "+person.getPerson_similarity_score());
         }
+
+        recyclerView=(RecyclerView) findViewById(R.id.id_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter=new RecyclerAdapter(bestSimilarPerson,accountPerson.getPerson_profile_image_url(),MainActivity.this);
+        recyclerView.setAdapter(adapter);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +82,22 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        //(NavigationDrawer) get reference to all
+        nav_profileImage = (ImageView) headerView.findViewById(R.id.id_nav_profileImage);
+        nav_user_name = (TextView) headerView.findViewById(R.id.id_nav_user_name);
+        nav_user_screen_name= (TextView) headerView.findViewById(R.id.id_nav_user_screen_name);
+        nav_user_location = (TextView) headerView.findViewById(R.id.id_nav_user_location);
+        updateNavigationView();
+
+    }
+
+    private  void updateNavigationView(){
+        nav_user_name.setText(accountPerson.getPerson_name());
+        nav_user_screen_name.setText("@"+accountPerson.getPerson_screen_name());
+        nav_user_location.setText(accountPerson.getPerson_location());
+        Picasso.with(MainActivity.this).load(accountPerson.getPerson_profile_image_url()).placeholder(R.drawable.nav_profile_avatar).fit().into(nav_profileImage);
     }
 
     @Override
@@ -88,12 +123,10 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -103,7 +136,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 

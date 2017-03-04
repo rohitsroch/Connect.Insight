@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:plainpie="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:background="@drawable/list_item_border"
     android:alpha="0.90"
@@ -25,7 +26,7 @@
         android:layout_margin="5dp">
 
         <TextView
-            android:id="@+id/id_list_item_name"
+            android:id="@+id/id_list_item_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="user_name"
@@ -37,15 +38,15 @@
             android:textStyle="normal|bold" />
 
         <TextView
-            android:id="@+id/id_list_item_mobileNo"
-            android:layout_width="match_parent"
+            android:id="@+id/id_list_item_user_screen_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="user_screen_name"
             android:textSize="14sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
-            android:id="@+id/id_list_item_status"
+            android:id="@+id/id_list_item_user_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -54,6 +55,39 @@
 
     </LinearLayout>
 
+    <az.plainpie.PieView
+        android:id="@+id/id_pieView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        plainpie:inner_pie_padding="20"
+        plainpie:percentage="70"
+        android:layout_margin="7dp"
+        plainpie:percentage_size="8"
+        plainpie:inner_text_visibility="true"/>
 
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/id_tweet_button"
+            android:layout_width="60dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:background="@drawable/custom_tweet_button"
+            android:text="Tweet"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </LinearLayout>
 
 </LinearLayout>
