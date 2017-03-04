@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Connect.Insight</string>
+
+    <string name="location_enable_description"><![CDATA[ <b><font color=#ff0000>write</b> your <b><font color=#0000ff>text</b> here.]]></string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
