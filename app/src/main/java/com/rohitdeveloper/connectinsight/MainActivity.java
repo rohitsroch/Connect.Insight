@@ -1,11 +1,17 @@
 package com.rohitdeveloper.connectinsight;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,8 +21,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,9 +35,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
+    private SharedPreferences sharedPref;
+
 
     private ArrayList<Person> bestSimilarPerson;
     private Person accountPerson;
+    private String searchQuery=null;
 
     //For showing listView
     RecyclerView recyclerView;
@@ -50,6 +62,9 @@ public class MainActivity extends AppCompatActivity
         bestSimilarPerson=new ArrayList<Person>();
         bestSimilarPerson=(ArrayList<Person>)getIntent().getSerializableExtra("BestSimilarPerson");
         accountPerson=(Person) getIntent().getSerializableExtra("AccountPerson");
+        searchQuery=getIntent().getStringExtra("Query");
+
+        sharedPref= getApplicationContext().getSharedPreferences("ConnectInsight", Context.MODE_PRIVATE);
 
         for(Person person:bestSimilarPerson){
             Log.d(TAG,person.getPerson_screen_name()+" "+person.getPerson_similarity_score());
@@ -69,8 +84,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent mapsActivityIntent = new Intent(MainActivity.this,MapsActivity.class);
+                mapsActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mapsActivityIntent.putExtra("BestSimilarPerson",(ArrayList<Person>) bestSimilarPerson);
+                startActivity(mapsActivityIntent);
             }
         });
 
@@ -124,7 +141,12 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_tweets) {
+            Intent queryTweetActivityIntent = new Intent(MainActivity.this,QueryTweetActivity.class);
+            queryTweetActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            queryTweetActivityIntent.putExtra("Query",searchQuery);
+            startActivity(queryTweetActivityIntent);
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -136,22 +158,46 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-         if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+         if (id == R.id.nav_manage) {
+            // Handle the manage action
+             getNewDistance();
+         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void getNewDistance(){
+        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+        View dialogView = layoutInflater.inflate(R.layout.manage_distance_prompt, null);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Reset Distance");
+        builder.setMessage("Enter the distance in Km");
+        builder.setView(dialogView);
+        final EditText input = (EditText) dialogView.findViewById(R.id.id_prompt_distance);
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("GeoDistance",input.getText().toString());
+                editor.commit();
+                dialog.dismiss();
+                Toast.makeText(MainActivity.this,"Distance changed!",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        // create alert dialog
+        android.support.v7.app.AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
 }

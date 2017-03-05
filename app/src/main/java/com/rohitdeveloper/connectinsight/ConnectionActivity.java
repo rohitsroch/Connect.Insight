@@ -1,10 +1,15 @@
 package com.rohitdeveloper.connectinsight;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ViewUtils;
@@ -54,6 +59,9 @@ import java.util.regex.Pattern;
 public class ConnectionActivity extends AppCompatActivity {
 
     private static final String TAG = "ConnectionActivity";
+
+    private SharedPreferences sharedPref;
+
     private ProgressBar progressbar;
     private TextView progress_description;
 
@@ -73,6 +81,7 @@ public class ConnectionActivity extends AppCompatActivity {
     private String SEARCH_QUERY =null;
     private String SEARCH_RESULT_TYPE =null;
     private int SEARCH_COUNT = 15;
+    private Integer SEARCH_DISTANCE=800;
     private Geocode SEARCH_GEO_CODE = null;
     private int totalUserCount;
 
@@ -94,16 +103,27 @@ public class ConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection);
 
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setIcon(R.mipmap.ic_launcher);
+
+        sharedPref= getApplicationContext().getSharedPreferences("ConnectInsight", Context.MODE_PRIVATE);
+        SEARCH_DISTANCE=Integer.parseInt(sharedPref.getString("GeoDistance", "800"));
+        Log.d(TAG,SEARCH_DISTANCE.toString());
+
         progressbar=(ProgressBar) findViewById(R.id.id_progress_bar);
+        progressbar.getIndeterminateDrawable().setColorFilter(
+                Color.BLUE, android.graphics.PorterDuff.Mode.SRC_IN);
 
         progress_description=(TextView) findViewById(R.id.id_progress_description);
-        String description = "We're learning about you to better connect you "+"<font color='#003566'>similar people</font>";
+        String description = "Please wait,We're learning about you to better connect with "+"<font color='#003566'>similar people</font>";
         progress_description.setText(fromHtml(description));
 
         latitude = getIntent().getDoubleExtra("Latitude",0);
         longitude =getIntent().getDoubleExtra("Longitude",0);
         SEARCH_QUERY=getIntent().getStringExtra("Query");
-        SEARCH_GEO_CODE=new Geocode(latitude,longitude,500, Geocode.Distance.KILOMETERS);
+        SEARCH_GEO_CODE=new Geocode(latitude,longitude,SEARCH_DISTANCE, Geocode.Distance.KILOMETERS);//Radius of search
         SEARCH_RESULT_TYPE="mixed";
 
         nearbyPerson=new ArrayList<Person>();
@@ -363,6 +383,7 @@ public class ConnectionActivity extends AppCompatActivity {
             mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mainActivityIntent.putExtra("BestSimilarPerson",(ArrayList<Person>) bestSimilarPerson);
             mainActivityIntent.putExtra("AccountPerson",(Person)accountPerson);
+            mainActivityIntent.putExtra("Query",SEARCH_QUERY);
             startActivity(mainActivityIntent);
     }
 

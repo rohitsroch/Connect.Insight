@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:background="@color/colorDetailTextBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/id_prompt_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_manage_distance_shape"
+        android:ellipsize="start"
+        android:hint="Km"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="10dp">
+
+        <requestFocus />
+
+    </EditText>
+
+</LinearLayout>

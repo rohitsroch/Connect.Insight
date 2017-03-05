@@ -82,18 +82,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         viewHolder.itemUserName.setText(bestSimilarPerson.get(index).getPerson_name());
         viewHolder.itemUserScreeName.setText("@"+bestSimilarPerson.get(index).getPerson_screen_name());
         viewHolder.itemUserLocation.setText(bestSimilarPerson.get(index).getPerson_location());
+
         Float similarity_score=bestSimilarPerson.get(index).getPerson_similarity_score();
-        DecimalFormat value = new DecimalFormat("##.00");
-        String score=String.valueOf(value.format(similarity_score));
-        viewHolder.itemPieView.setInnerText(score);
+        //DecimalFormat value = new DecimalFormat("##.0");
+        //String score=String.valueOf(value.format(similarity_score));
+        //viewHolder.itemPieView.setInnerText(score);
 
 
         if(similarity_score>=0) {
-            viewHolder.itemPieView.setPercentageBackgroundColor(R.color.colorGreen);
-            viewHolder.itemPieView.setPercentageTextSize(similarity_score*100);
+
+            viewHolder.itemPieView.setPercentage(similarity_score*100);
+            viewHolder.itemPieView.setInnerBackgroundColor(R.color.colorGreen);
         }else{
-            viewHolder.itemPieView.setPercentageBackgroundColor(R.color.colorRed);
-            viewHolder.itemPieView.setPercentageTextSize(similarity_score*100*(-1));
+            viewHolder.itemPieView.setPercentage(similarity_score*100*(-1));
+            viewHolder.itemPieView.setInnerBackgroundColor(R.color.colorRed);
         }
 
         viewHolder.itemTweetButton.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +105,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 new LovelyStandardDialog(context)
                         .setTopColorRes(R.color.indigo)
                         .setButtonsColorRes(R.color.colorRed)
-                        //.setIcon(R.drawable.twitter_circle)
+                        .setIcon(R.drawable.ic_menu_twitter)
                         .setTitle("Connect")
                         .setMessage("@"+bestSimilarPerson.get(index).getPerson_screen_name()+" I found we've similar personal insights #ConnectInsight.Let's connect!")
                         .setPositiveButton("YES", new View.OnClickListener() {

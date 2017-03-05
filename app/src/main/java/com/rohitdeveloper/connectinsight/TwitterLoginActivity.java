@@ -2,6 +2,7 @@ package com.rohitdeveloper.connectinsight;
 
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -43,6 +44,11 @@ public class TwitterLoginActivity extends AppCompatActivity {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_twitter_login);
+
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setIcon(R.mipmap.ic_launcher);
 
         twitterHashtag=(EditText) findViewById(R.id.id_twitter_hash_tag);
         twitterLoginDescription=(TextView) findViewById(R.id.id_twitter_login_description);

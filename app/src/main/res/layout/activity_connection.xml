@@ -29,7 +29,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="We're learning about you to better connect you with similar people"
+        android:text="Please wait,We're learning about you to better connect with similar people"
         android:id="@+id/id_progress_description"
         android:textColor="@color/colorGreen"
         android:padding="25dp"
