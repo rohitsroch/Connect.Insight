@@ -37,5 +37,4 @@ public class SplashScreen extends AppCompatActivity {
         super.onPause();
         finish();
     }
-
 }
